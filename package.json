@@ -1,6 +1,6 @@
 {
-  "name": "tron-forge",
-  "productName": "tron-forge",
+  "name": "electron",
+  "productName": "electron",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -42,7 +42,8 @@
     }
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "electron-squirrel-startup": "^1.0.0",
+    "tracking": "^1.1.3"
   },
   "devDependencies": {
     "@electron-forge/cli": "^6.0.0-beta.50",
