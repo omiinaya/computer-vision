@@ -1,6 +1,11 @@
 const { desktopCapturer, remote } = require('electron');
 const { Menu } = remote;
 const videoElement = document.querySelector('video');
+const ipc = require('electron').ipcRenderer
+
+var video = document.getElementById('video');
+var canvas = document.getElementById('canvas');
+var context = canvas.getContext('2d');
 
 //on DOM load
 document.addEventListener("DOMContentLoaded", function (event) {
@@ -14,11 +19,10 @@ async function getVideoSources() {
   });
 
   const videoOptionsMenu = Menu.buildFromTemplate(
-    
+
     inputSources.map(source => {
-      console.log(source.name)
       console.log(source)
-      if (source.name === 'Screen 1') {
+      if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
         selectSource(source)
       }
     })
@@ -46,4 +50,8 @@ async function selectSource(source) {
   //preview the source in a video element
   videoElement.srcObject = stream;
   videoElement.play();
+}
+
+async function test() {
+  ipc.send('REQUEST_TEST_1')
 }

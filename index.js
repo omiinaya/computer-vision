@@ -1,3 +1,5 @@
+require('v8-compile-cache')
+
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 
@@ -14,3 +16,5 @@ const createWindow = () => {
 };
 
 app.on('ready', createWindow);
+
+require('./ipcM.js')
