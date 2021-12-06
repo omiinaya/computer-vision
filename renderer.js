@@ -55,7 +55,8 @@ async function doOCR() {
 
   const ctx = c.getContext('2d')
   ctx.filter = 'grayscale(1)'
-  ctx.drawImage(video, 0, 0, 300, 200);
+  //                                   x   y   cW   cH
+  ctx.drawImage(video, 0, 0, 300, 200, 0, -50, 300, 200);
 
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
