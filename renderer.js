@@ -3,8 +3,9 @@ const { desktopCapturer } = require('electron');
 
 const { createWorker, createScheduler } = Tesseract;
 const videoElement = document.querySelector('video');
+const startButton = document.getElementById('start-button')
+const stopButton = document.getElementById('stop-button')
 const scheduler = createScheduler();
-const video = document.getElementById('video');
 let timerId = null;
 
 //on DOM load
@@ -17,7 +18,7 @@ async function getVideoSources() {
   const inputSources = await desktopCapturer.getSources({
     types: ['window', 'screen']
   });
-  
+
   inputSources.map(source => {
     if (source.name === 'Entire Screen' || source.name === 'Screen 1') {
       selectSource(source)
@@ -44,19 +45,19 @@ async function selectSource(source) {
 
   //preview the source in a video element
   videoElement.srcObject = stream;
-  videoElement.play();
+  videoElement.play()
 }
 
 async function doOCR() {
   const c = document.querySelector('canvas');
-  c.width = 300;
-  c.height = 200;
+  const test = videoElement.videoHeight
+  c.width = 256;
+  c.height = 144;
   c.getContext('2d')
 
   const ctx = c.getContext('2d')
-  ctx.filter = 'grayscale(1)'
-  //                                   x   y   cW   cH
-  ctx.drawImage(video, 0, 0, 300, 200, 0, -50, 300, 200);
+  //ctx.filter = 'grayscale(1)'
+  ctx.drawImage(videoElement, 0, test-100, c.width, c.height, 0, 0, c.width, c.height);
 
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
@@ -77,12 +78,16 @@ async function doOCR() {
     scheduler.addWorker(worker);
   }
   console.log('Initialized Tesseract.js');
-  video.addEventListener('play', () => {
-    timerId = setInterval(doOCR, 1000);
-  });
-  video.addEventListener('pause', () => {
-    clearInterval(timerId);
-  });
-  console.log('Now you can play the video. :)');
-  video.controls = true;
 })();
+
+function start() {
+  timerId = setInterval(doOCR, 1000);
+}
+
+function stop() {
+  clearInterval(timerId);
+}
+
+function test() {
+  console.log(videoElement.videoWidth+ ' : '+videoElement.videoHeight)
+}
