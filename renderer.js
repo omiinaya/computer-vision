@@ -49,9 +49,14 @@ async function selectSource(source) {
 
 async function doOCR() {
   const c = document.querySelector('canvas');
-  c.width = 600;
+  c.width = 300;
   c.height = 200;
-  c.getContext('2d').drawImage(video, 0, 0, 600, 200);
+  c.getContext('2d')
+
+  const ctx = c.getContext('2d')
+  ctx.filter = 'grayscale(1)'
+  ctx.drawImage(video, 0, 0, 300, 200);
+
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
   const end = new Date()
