@@ -44,14 +44,14 @@ async function doOCR() {
   const c = document.querySelector('canvas');
   const vW = videoElement.videoWidth;
   const vH = videoElement.videoHeight;
-  const bLeft = videoElement.videoHeight - 60
-  c.width = 1000;
-  c.height = 70;
+  //const bLeft = videoElement.videoHeight - 60
+  c.width = 500;
+  c.height = 300;
 
   const ctx = c.getContext('2d')
-  ctx.scale(4, 4)
+  ctx.scale(2, 2)
   ctx.filter = 'grayscale(1)'
-  ctx.drawImage(videoElement, 33, bLeft, vW, vH, 0, 0, vW, vH);
+  ctx.drawImage(videoElement, 0, 0, vW, vH, 0, 0, vW, vH);
 
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
@@ -61,7 +61,7 @@ async function doOCR() {
   console.log(message)
   text.split('\n').forEach((line) => {
     //print(line)
-    console.log(message)
+    console.log(line)
   });
 };
 
@@ -79,7 +79,7 @@ async function initialize() {
 }
 
 function start() {
-  timerId = setInterval(doOCR, 500);
+  timerId = setInterval(doOCR, 1000);
 }
 
 function stop() {
