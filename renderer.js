@@ -42,14 +42,15 @@ async function selectSource(source) {
 
 async function doOCR() {
   const c = document.querySelector('canvas');
-  const bLeft = videoElement.videoHeight
-  c.width = 256;
-  c.height = 144;
-  c.getContext('2d')
-
+  const bLeft = videoElement.videoHeight - 60
+  c.width = 1000;
+  c.height = 70;
   const ctx = c.getContext('2d')
-  //ctx.filter = 'grayscale(1)' <-- was actually making readability worse.
-  ctx.drawImage(videoElement, 0, bLeft-100, c.width, c.height, 0, 0, c.width, c.height);
+
+  ctx.scale(4, 4)
+  ctx.imageSmoothingEnabled = false;
+  ctx.filter = 'grayscale(1)'
+  ctx.drawImage(videoElement, 33, bLeft, videoElement.videoWidth, videoElement.videoHeight, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
 
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
@@ -71,10 +72,11 @@ async function initialize() {
     scheduler.addWorker(worker);
   }
   console.log('Initialized Tesseract.js');
+  //start()
 }
 
 function start() {
-  timerId = setInterval(doOCR, 1000);
+  timerId = setInterval(doOCR, 500);
 }
 
 function stop() {
@@ -82,5 +84,5 @@ function stop() {
 }
 
 function test() {
-  console.log(videoElement.videoWidth+ ' : '+videoElement.videoHeight)
+  console.log(videoElement.videoWidth + ' : ' + videoElement.videoHeight)
 }
