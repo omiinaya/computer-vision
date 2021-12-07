@@ -1,5 +1,5 @@
 const { desktopCapturer } = require('electron');
-
+const ipc = require('electron').ipcRenderer
 const { createWorker, createScheduler } = Tesseract;
 const videoElement = document.querySelector('video');
 const scheduler = createScheduler();
@@ -42,23 +42,26 @@ async function selectSource(source) {
 
 async function doOCR() {
   const c = document.querySelector('canvas');
+  const vW = videoElement.videoWidth;
+  const vH = videoElement.videoHeight;
   const bLeft = videoElement.videoHeight - 60
   c.width = 1000;
   c.height = 70;
-  const ctx = c.getContext('2d')
 
+  const ctx = c.getContext('2d')
   ctx.scale(4, 4)
-  ctx.imageSmoothingEnabled = false;
   ctx.filter = 'grayscale(1)'
-  ctx.drawImage(videoElement, 33, bLeft, videoElement.videoWidth, videoElement.videoHeight, 0, 0, videoElement.videoWidth, videoElement.videoHeight);
+  ctx.drawImage(videoElement, 33, bLeft, vW, vH, 0, 0, vW, vH);
 
   const start = new Date();
   const { data: { text } } = await scheduler.addJob('recognize', c);
   const end = new Date()
   var message = `[${start.getMinutes()}:${start.getSeconds()} - ${end.getMinutes()}:${end.getSeconds()}], ${(end - start) / 1000} s`
-  console.log(message);
+  //print(message);
+  console.log(message)
   text.split('\n').forEach((line) => {
-    console.log(line);
+    //print(line)
+    console.log(message)
   });
 };
 
@@ -85,4 +88,8 @@ function stop() {
 
 function test() {
   console.log(videoElement.videoWidth + ' : ' + videoElement.videoHeight)
+}
+
+async function print(a) {
+  ipc.send('PRINT_REQUEST', a)
 }
